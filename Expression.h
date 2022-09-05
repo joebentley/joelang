@@ -19,12 +19,17 @@ enum class Operator {
     invert
 };
 
+std::string op_to_string(Operator op);
+
 enum class ExpressionType {
     binary,
     literal,
     grouping,
     unary
 };
+
+struct Expression;
+using EvaluationErrorOr = ErrorOr<Expression>;
 
 struct Expression {
     std::optional<ExpressionType> type;
@@ -72,5 +77,5 @@ struct Expression {
 
     [[nodiscard]] std::string string() const;
 
-    std::optional<Expression> evaluate();
+    EvaluationErrorOr evaluate();
 };

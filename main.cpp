@@ -4,8 +4,8 @@
 
 int main()
 {
-    Lexer lexer("!((13.4 + 3) * 4 + 4 > 70)");
-    //    Lexer lexer("true != !true");
+    Lexer lexer("(13.4 + 3) * 4 + 4 + false");
+    //    Lexer lexer("true == false < 4");
     auto maybe_tokens = lexer.lex();
 
     if (maybe_tokens.is_error()) {
@@ -26,14 +26,12 @@ int main()
         return -1;
     }
 
-    auto expr = std::move(expression.get_value());
+    std::cout << (*expression)->string() << std::endl;
 
-    std::cout << expr->string() << std::endl;
+    auto evaled = (*expression)->evaluate();
 
-    auto evaled = expr->evaluate();
-
-    if (!evaled.has_value()) {
-        std::cerr << "Evaluation error" << std::endl;
+    if (evaled.is_error()) {
+        std::cerr << "Evaluation error: " << evaled.get_error().string() << std::endl;
         return -1;
     }
 

@@ -29,6 +29,16 @@ struct ErrorOr {
         return std::get<T>(_value);
     }
 
+    T &operator*()
+    {
+        return get_value();
+    }
+
+    T *operator->()
+    {
+        return &get_value();
+    }
+
 private:
     std::variant<Error, T> _value;
 };
