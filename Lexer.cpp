@@ -41,6 +41,8 @@ LexErrorOr Lexer::lex()
     bool in_number = false;
     std::string literal;
 
+    reset();
+
     while (index < source.size()) {
         char c = source[index];
 
