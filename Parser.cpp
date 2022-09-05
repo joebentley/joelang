@@ -149,10 +149,11 @@ ParserErrorOr Parser::primary()// NOLINT(misc-no-recursion)
         return Expression::Literal(std::any_cast<double>(token.literal));
     } else if (token.type == TokenType::true_tok) {
         return Expression::Literal(true);
-    } else if (token.type == TokenType::true_tok) {
+    } else if (token.type == TokenType::false_tok) {
         return Expression::Literal(false);
     } else if (token.type == TokenType::left_paren) {
         auto expr = expression();
+        TRY(expr)
         if (!accept(TokenType::right_paren))
             return Error{"unmatched paren"};
         return Expression::Grouping(std::move(expr.get_value()));
