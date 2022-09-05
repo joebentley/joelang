@@ -6,21 +6,16 @@
 #include <variant>
 #include <vector>
 
+#include "Error.h"
 #include "Token.h"
 
-struct LexError {
-    int line;
-    int column;
-    std::string message;
-
-    [[nodiscard]] std::string string() const;
-};
+using LexErrorOr = ErrorOr<std::vector<Token>>;
 
 class Lexer {
 public:
     explicit Lexer(std::string_view source) : source(source) {}
 
-    std::variant<std::vector<Token>, LexError> lex();
+    LexErrorOr lex();
 
     void reset();
 
@@ -31,7 +26,5 @@ private:
     std::vector<Token> tokens;
 
     bool lex_token(TokenType token);
-    std::optional<LexError> convert_and_push_number(const std::string &literal);
+    std::optional<Error> convert_and_push_number(const std::string &literal);
 };
-
-std::variant<std::vector<Token>, LexError> lex(std::string_view source);

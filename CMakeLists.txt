@@ -3,4 +3,4 @@ project(joelang)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(joelang main.cpp Lexer.cpp Lexer.h Token.h Token.cpp Parser.cpp Parser.h Expression.cpp Expression.h)
+add_executable(joelang main.cpp Lexer.cpp Lexer.h Token.h Token.cpp Parser.cpp Parser.h Expression.cpp Expression.h Error.h)

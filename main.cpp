@@ -8,12 +8,12 @@ int main()
     //    Lexer lexer("true != !true");
     auto maybe_tokens = lexer.lex();
 
-    if (std::holds_alternative<LexError>(maybe_tokens)) {
-        std::cerr << std::get<LexError>(maybe_tokens).string() << std::endl;
+    if (maybe_tokens.is_error()) {
+        std::cerr << "Lexer Error: " << maybe_tokens.get_error().string() << std::endl;
         return -1;
     }
 
-    auto tokens = std::get<std::vector<Token>>(maybe_tokens);
+    auto tokens = maybe_tokens.get_value();
 
     for (const auto &token: tokens) {
         std::cout << token.string() << std::endl;
@@ -21,12 +21,12 @@ int main()
 
     auto expression = Parser(tokens).parse();
 
-    if (std::holds_alternative<ParseError>(expression)) {
-        std::cerr << "Parsing Error: " << std::get<ParseError>(expression).string() << std::endl;
+    if (expression.is_error()) {
+        std::cerr << "Parsing Error: " << expression.get_error().string() << std::endl;
         return -1;
     }
 
-    auto expr = std::move(std::get<std::unique_ptr<Expression>>(expression));
+    auto expr = std::move(expression.get_value());
 
     std::cout << expr->string() << std::endl;
 

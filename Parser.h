@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Error.h"
 #include "Expression.h"
 #include "Token.h"
 #include <memory>
@@ -19,26 +20,22 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
                | "(" expression ")" ;
 */
 
-struct ParseError {
-    std::string message;
-
-    [[nodiscard]] std::string string() const { return message; }
-};
+using ParserErrorOr = ErrorOr<std::unique_ptr<Expression>>;
 
 class Parser {
 public:
     explicit Parser(std::vector<Token> tokens) : tokens(std::move(tokens)) {}
 
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> parse();
+    [[nodiscard]] ParserErrorOr parse();
 
 private:
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> expression();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> equality();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> comparison();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> term();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> factor();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> unary();
-    [[nodiscard]] std::variant<std::unique_ptr<Expression>, ParseError> primary();
+    [[nodiscard]] ParserErrorOr expression();
+    [[nodiscard]] ParserErrorOr equality();
+    [[nodiscard]] ParserErrorOr comparison();
+    [[nodiscard]] ParserErrorOr term();
+    [[nodiscard]] ParserErrorOr factor();
+    [[nodiscard]] ParserErrorOr unary();
+    [[nodiscard]] ParserErrorOr primary();
     bool accept(TokenType type);
 
     size_t current_token_index = 0;

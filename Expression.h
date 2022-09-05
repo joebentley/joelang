@@ -1,4 +1,5 @@
 #pragma once
+#include "Error.h"
 #include <memory>
 #include <optional>
 #include <string>

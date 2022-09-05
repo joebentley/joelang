@@ -2,21 +2,21 @@
 #include <cctype>
 #include <stdexcept>
 
-std::string LexError::string() const
+Error lex_error(int line, int column, const std::string &message)
 {
-    return "Error at " + std::to_string(line) + ":" + std::to_string(column) + " " + message;
+    return Error{"Error at " + std::to_string(line) + ":" + std::to_string(column) + " " + message};
 }
 
-std::optional<LexError> Lexer::convert_and_push_number(const std::string &literal)
+std::optional<Error> Lexer::convert_and_push_number(const std::string &literal)
 {
     size_t num_processed = 0;
     try {
         tokens.emplace_back(TokenType::number, line, column, literal, std::make_any<double>(std::stof(literal, &num_processed)));
     } catch (std::logic_error const &) {
-        return LexError{line, column, "could not lex number: " + literal};
+        return lex_error(line, column, "could not lex number: " + literal);
     }
     if (num_processed != literal.size())
-        return LexError{line, column, "could not lex number: " + literal};
+        return lex_error(line, column, "could not lex number: " + literal);
     return {};
 }
 
@@ -36,7 +36,7 @@ bool Lexer::lex_token(TokenType token)
     if (lex_token(token))        \
         continue;
 
-std::variant<std::vector<Token>, LexError> Lexer::lex()
+LexErrorOr Lexer::lex()
 {
     bool in_number = false;
     std::string literal;
@@ -87,7 +87,7 @@ std::variant<std::vector<Token>, LexError> Lexer::lex()
         CONTINUE_IF_MATCH(TokenType::right_paren)
 
         if (c == '\r' && source[index + 1] != '\n') {
-            return LexError{line, column, "\\r that is not followed by \\n"};
+            return lex_error(line, column, "\\r that is not followed by \\n");
         }
 
         if (c == '\r' && source[index + 1] == '\n') {
@@ -103,7 +103,7 @@ std::variant<std::vector<Token>, LexError> Lexer::lex()
             continue;
         }
 
-        return LexError{line, column, "could not match at " + std::string(1, c)};
+        return lex_error(line, column, "could not match at " + std::string(1, c));
     }
 
     return tokens;
