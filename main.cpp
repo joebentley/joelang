@@ -1,6 +1,6 @@
+#include "Format.h"
 #include "Lexer.h"
 #include "Parser.h"
-#include <iostream>
 
 int main()
 {
@@ -9,33 +9,33 @@ int main()
     auto maybe_tokens = lexer.lex();
 
     if (maybe_tokens.is_error()) {
-        std::cerr << "Lexer Error: " << maybe_tokens.get_error().string() << std::endl;
+        Format::println("Lexer Error: {}", maybe_tokens.get_error().string());
         return -1;
     }
 
     auto tokens = maybe_tokens.get_value();
 
     for (const auto &token: tokens) {
-        std::cout << token.string() << std::endl;
+        Format::println("{}", token.string());
     }
 
     auto expression = Parser(tokens).parse();
 
     if (expression.is_error()) {
-        std::cerr << "Parsing Error: " << expression.get_error().string() << std::endl;
+        Format::println("Parsing Error: {}", expression.get_error().string());
         return -1;
     }
 
-    std::cout << (*expression)->string() << std::endl;
+    Format::println("{}", (*expression)->string());
 
     auto evaled = (*expression)->evaluate();
 
     if (evaled.is_error()) {
-        std::cerr << "Evaluation error: " << evaled.get_error().string() << std::endl;
+        Format::println("Evaluation Error: {}", evaled.get_error().string());
         return -1;
     }
 
-    std::cout << evaled->string() << std::endl;
+    Format::println("{}", evaled->string());
 
     return 0;
 }
