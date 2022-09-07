@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Error.h"
 #include "Expression.h"
 #include "Token.h"
+#include <JK/Error.h>
 #include <memory>
 #include <variant>
 #include <vector>

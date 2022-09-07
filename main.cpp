@@ -1,6 +1,6 @@
-#include "Format.h"
 #include "Lexer.h"
 #include "Parser.h"
+#include <JK/Format.h>
 
 int main()
 {

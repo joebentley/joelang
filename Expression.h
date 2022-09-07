@@ -1,5 +1,5 @@
 #pragma once
-#include "Error.h"
+#include <JK/Error.h>
 #include <memory>
 #include <optional>
 #include <string>

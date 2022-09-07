@@ -6,8 +6,8 @@
 #include <variant>
 #include <vector>
 
-#include "Error.h"
 #include "Token.h"
+#include <JK/Error.h>
 
 using LexErrorOr = ErrorOr<std::vector<Token>>;
 

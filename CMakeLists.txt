@@ -3,4 +3,7 @@ project(joelang)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(joelang main.cpp Lexer.cpp Lexer.h Token.h Token.cpp Parser.cpp Parser.h Expression.cpp Expression.h Error.h Format.h)
+add_executable(joelang main.cpp Lexer.cpp Lexer.h Token.h Token.cpp Parser.cpp Parser.h Expression.cpp Expression.h)
+
+add_subdirectory(JK)
+target_link_libraries(joelang PUBLIC JK)
