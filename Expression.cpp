@@ -116,8 +116,16 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
                 default:
                     return Error{"Invalid operator for two bools: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
             }
+        } else if (std::holds_alternative<std::string>(lhs->value) && std::holds_alternative<std::string>(rhs->value)) {
+            auto lhs_string = std::get<std::string>(lhs->value);
+            auto rhs_string = std::get<std::string>(rhs->value);
+            if (*op == Operator::add) {
+                return Expression(lhs_string + rhs_string);
+            } else {
+                return Error{"Invalid operator for two strings: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+            }
         } else {
-            return Error{"Mismatched operand types in expression: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+            return Error{"Invalid or mismatched operand types in expression: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
         }
     } else if (*type == ExpressionType::literal) {
         return Expression(value);
