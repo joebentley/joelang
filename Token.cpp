@@ -52,8 +52,15 @@ std::string Token::string() const
 {
     std::string _literal;
     if (literal.has_value()) {
-        _literal = " " + std::to_string(std::any_cast<double>(literal));
+        if (std::holds_alternative<double>(*literal)) {
+            _literal = " " + std::to_string(std::get<double>(*literal));
+        } else if (std::holds_alternative<std::string>(*literal)) {
+            _literal = " \"" + std::get<std::string>(*literal) + "\"";
+        }
     }
 
-    return Format::fmt("{}: {} {} \"{}\" {}", std::to_string(line), std::to_string(column), token_type_string(type), lexeme, _literal);
+    if (_literal.empty())
+        return Format::fmt("{}: {} {} \"{}\"", std::to_string(line), std::to_string(column), token_type_string(type), lexeme);
+    else
+        return Format::fmt("{}: {} {} \"{}\" {}", std::to_string(line), std::to_string(column), token_type_string(type), lexeme, _literal);
 }

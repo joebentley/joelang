@@ -1,10 +1,12 @@
 #pragma once
 
-#include <any>
+#include "Literal.h"
+#include <optional>
 #include <string>
 #include <utility>
 
 enum class TokenType {
+    string,
     number,
     plus,
     minus,
@@ -29,13 +31,13 @@ std::string token_type_lexeme(TokenType type);
 struct Token {
     Token(TokenType type, int line, int column, std::string lexeme) : type(type), line(line), column(column), lexeme(std::move(lexeme)) {}
 
-    Token(TokenType type, int line, int column, std::string lexeme, std::any literal) : type(type), line(line), column(column), lexeme(std::move(lexeme)), literal(std::move(literal)) {}
+    Token(TokenType type, int line, int column, std::string lexeme, Literal literal) : type(type), line(line), column(column), lexeme(std::move(lexeme)), literal(std::move(literal)) {}
 
     TokenType type;
     int line;
     int column;
     std::string lexeme;
-    std::any literal;
+    std::optional<Literal> literal;
 
     [[nodiscard]] std::string string() const;
 };
