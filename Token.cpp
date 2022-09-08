@@ -1,4 +1,5 @@
 #include "Token.h"
+#include <JK/Format.h>
 #include <vector>
 
 const std::vector<std::string> token_names = {
@@ -54,5 +55,5 @@ std::string Token::string() const
         _literal = " " + std::to_string(std::any_cast<double>(literal));
     }
 
-    return std::to_string(line) + ":" + std::to_string(column) + " " + token_type_string(type) + " \"" + lexeme + "\" " + _literal;
+    return Format::fmt("{}: {} {} \"{}\" {}", std::to_string(line), std::to_string(column), token_type_string(type), lexeme, _literal);
 }
