@@ -10,7 +10,7 @@ ParserErrorOr Parser::parse()
     TRY(maybe_expr)
 
     if (current_token_index < tokens.size()) {
-        return ParserErrorOr(Error{"Syntax error at token " + std::to_string(current_token_index) + "   " + tokens[current_token_index].string()});
+        return Error{"Syntax error at token " + std::to_string(current_token_index) + "   " + tokens[current_token_index].string()};
     }
 
     return maybe_expr;
