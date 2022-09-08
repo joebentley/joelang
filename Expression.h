@@ -1,8 +1,10 @@
 #pragma once
+#include "Literal.h"
 #include <JK/Error.h>
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 
 enum class Operator {
     add,
@@ -37,14 +39,14 @@ struct Expression {
     std::unique_ptr<Expression> left;
     std::unique_ptr<Expression> right;
 
-    std::variant<double, bool> value;
+    Literal value;
 
     Expression(std::optional<ExpressionType> type,
                std::optional<Operator> op,
                std::unique_ptr<Expression> left,
                std::unique_ptr<Expression> right) : type(type), op(op), left(std::move(left)), right(std::move(right)) {}
 
-    explicit Expression(std::variant<double, bool> value) : type(ExpressionType::literal), value(value) {}
+    explicit Expression(Literal value) : type(ExpressionType::literal), value(std::move(value)) {}
 
     Expression(std::unique_ptr<Expression> left, Operator op, std::unique_ptr<Expression> right) : type(ExpressionType::binary), left(std::move(left)), op(op), right(std::move(right)) {}
 
@@ -55,9 +57,9 @@ struct Expression {
         return std::make_unique<Expression>(std::move(left), op, std::move(right));
     }
 
-    static std::unique_ptr<Expression> Literal(std::variant<double, bool> value)
+    static std::unique_ptr<Expression> Literal(Literal value)
     {
-        return std::make_unique<Expression>(value);
+        return std::make_unique<Expression>(std::move(value));
     }
 
     static std::unique_ptr<Expression> Grouping(std::unique_ptr<Expression> expression)

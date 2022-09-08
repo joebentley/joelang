@@ -145,8 +145,8 @@ ParserErrorOr Parser::unary()// NOLINT(misc-no-recursion)
 ParserErrorOr Parser::primary()// NOLINT(misc-no-recursion)
 {
     auto token = tokens[current_token_index++];
-    if (token.type == TokenType::number) {
-        return Expression::Literal(std::any_cast<double>(token.literal));
+    if (token.type == TokenType::number || token.type == TokenType::string) {
+        return Expression::Literal(*token.literal);
     } else if (token.type == TokenType::true_tok) {
         return Expression::Literal(true);
     } else if (token.type == TokenType::false_tok) {

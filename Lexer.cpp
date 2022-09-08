@@ -11,7 +11,7 @@ std::optional<Error> Lexer::convert_and_push_number(const std::string &literal)
 {
     size_t num_processed = 0;
     try {
-        tokens.emplace_back(TokenType::number, line, column, literal, std::make_any<double>(std::stof(literal, &num_processed)));
+        tokens.emplace_back(TokenType::number, line, column, literal, std::stof(literal, &num_processed));
     } catch (std::logic_error const &) {
         return lex_error(line, column, "could not lex number: " + literal);
     }
@@ -39,6 +39,7 @@ bool Lexer::lex_token(TokenType token)
 LexErrorOr Lexer::lex()
 {
     bool in_number = false;
+    bool in_string = false;
     std::string literal;
 
     reset();
@@ -68,6 +69,26 @@ LexErrorOr Lexer::lex()
                 literal = "";
             }
             in_number = false;
+        }
+
+        // String
+        if (c == '"') {
+            index++;
+            if (in_string) {
+                in_string = false;
+                tokens.emplace_back(TokenType::string, line, column, literal, literal);
+                literal = "";
+                continue;
+            }
+            in_string = true;
+            continue;
+        } else if (in_string) {
+            if (index == source.size()) {
+                return Error{"Reached EOF inside string"};
+            }
+            literal += c;
+            index++;
+            continue;
         }
 
         // Keywords

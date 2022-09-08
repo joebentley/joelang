@@ -12,6 +12,8 @@ std::string Expression::string() const// NOLINT(misc-no-recursion)
             } else {
                 return "false";
             }
+        } else if (std::holds_alternative<std::string>(value)) {
+            return "\"" + std::get<std::string>(value) + "\"";
         }
     } else if (type == ExpressionType::unary) {
         if (*op == Operator::negate) {

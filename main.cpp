@@ -4,8 +4,9 @@
 
 int main()
 {
-    Lexer lexer("(13.4 + 3) * 4 + 4 + false");
+    //    Lexer lexer("(13.4 + 3) * 4 + 4 + false");
     //    Lexer lexer("true == false < 4");
+    Lexer lexer(R"("Hello" + " world!")");
     auto maybe_tokens = lexer.lex();
 
     if (maybe_tokens.is_error()) {

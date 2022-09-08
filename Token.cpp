@@ -3,6 +3,7 @@
 #include <vector>
 
 const std::vector<std::string> token_names = {
+        "string",
         "number",
         "plus",
         "minus",
@@ -26,6 +27,7 @@ std::string token_type_string(TokenType type)
 }
 
 const std::vector<std::string> token_lexemes = {
+        "string",
         "number",
         "+",
         "-",
