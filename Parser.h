@@ -13,7 +13,8 @@ expression     → equality ;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
+factor         → exponent ( ( "/" | "*" | "%" ) exponent )* ;
+exponent       → unary ( "^" unary )* ;
 unary          → ( "!" | "-" ) unary
                | primary ;
 primary        → NUMBER | STRING | "true" | "false" | "nil"
@@ -22,6 +23,9 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
 
 using ParserErrorOr = ErrorOr<std::unique_ptr<Expression>>;
 
+// There are two times that "current_token_index" is incremented:
+// when accept() matches the given token with the current one
+// and when primary() sees a pure literal
 class Parser {
 public:
     explicit Parser(std::vector<Token> tokens) : tokens(std::move(tokens)) {}
@@ -34,6 +38,7 @@ private:
     [[nodiscard]] ParserErrorOr comparison();
     [[nodiscard]] ParserErrorOr term();
     [[nodiscard]] ParserErrorOr factor();
+    [[nodiscard]] ParserErrorOr exponent();
     [[nodiscard]] ParserErrorOr unary();
     [[nodiscard]] ParserErrorOr primary();
     bool accept(TokenType type);

@@ -1,5 +1,6 @@
 #include "Expression.h"
 #include <cassert>
+#include <cmath>
 
 std::string Expression::string() const// NOLINT(misc-no-recursion)
 {
@@ -41,6 +42,10 @@ std::string op_to_string(Operator op)
             return "*";
         case Operator::divide:
             return "/";
+        case Operator::modulo:
+            return "%";
+        case Operator::power:
+            return "^";
         case Operator::equals:
             return "==";
         case Operator::not_equals:
@@ -90,6 +95,10 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
                     return Expression(lhs_double * rhs_double);
                 case Operator::divide:
                     return Expression(lhs_double / rhs_double);
+                case Operator::modulo:
+                    return Expression(fmod(lhs_double, rhs_double));
+                case Operator::power:
+                    return Expression(pow(lhs_double, rhs_double));
                 case Operator::less_than:
                     return Expression(lhs_double < rhs_double);
                 case Operator::greater_than:

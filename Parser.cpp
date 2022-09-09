@@ -105,22 +105,46 @@ ParserErrorOr Parser::term()// NOLINT(misc-no-recursion)
 
 ParserErrorOr Parser::factor()// NOLINT(misc-no-recursion)
 {
-    auto maybe_expr = unary();
+    auto maybe_expr = exponent();
     TRY(maybe_expr)
 
     auto expr = std::move(maybe_expr.get_value());
 
     for (;;) {
         if (accept(TokenType::asterisk)) {
-            maybe_expr = unary();
+            maybe_expr = exponent();
             TRY(maybe_expr)
 
             expr = Expression::Binary(std::move(expr), Operator::multiply, std::move(maybe_expr.get_value()));
         } else if (accept(TokenType::slash)) {
-            maybe_expr = unary();
+            maybe_expr = exponent();
             TRY(maybe_expr)
 
             expr = Expression::Binary(std::move(expr), Operator::divide, std::move(maybe_expr.get_value()));
+        } else if (accept(TokenType::percent)) {
+            maybe_expr = exponent();
+            TRY(maybe_expr)
+
+            expr = Expression::Binary(std::move(expr), Operator::modulo, std::move(maybe_expr.get_value()));
+        } else {
+            return expr;
+        }
+    }
+}
+
+ParserErrorOr Parser::exponent()// NOLINT(misc-no-recursion)
+{
+    auto maybe_expr = unary();
+    TRY(maybe_expr)
+
+    auto expr = std::move(maybe_expr.get_value());
+
+    for (;;) {
+        if (accept(TokenType::chevron)) {
+            maybe_expr = unary();
+            TRY(maybe_expr)
+
+            expr = Expression::Binary(std::move(expr), Operator::power, std::move(maybe_expr.get_value()));
         } else {
             return expr;
         }

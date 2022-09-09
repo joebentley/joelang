@@ -12,6 +12,8 @@ enum class Operator {
     multiply,
     divide,
     equals,
+    modulo,
+    power,
     not_equals,
     greater_than,
     greater_than_equals,

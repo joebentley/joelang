@@ -12,6 +12,8 @@ enum class TokenType {
     minus,
     asterisk,
     slash,
+    percent,
+    chevron,
     angle_right,
     angle_left,
     angle_right_equals,
