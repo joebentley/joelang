@@ -129,7 +129,6 @@ ParserErrorOr Parser::factor()// NOLINT(misc-no-recursion)
 
 ParserErrorOr Parser::unary()// NOLINT(misc-no-recursion)
 {
-    // TODO: boolean negation
     if (accept(TokenType::minus)) {
         auto u = unary();
         TRY(u)
