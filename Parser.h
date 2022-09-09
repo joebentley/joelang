@@ -9,7 +9,9 @@
 
 // Stolen from "crafting interpreters" book
 /*
-expression     → equality ;
+expression     → boolean_or ;
+boolean_or     → equality ( "||" equality )* ;
+boolean_and    → equality ( "&&" equality )* ;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term           → factor ( ( "-" | "+" ) factor )* ;
@@ -34,6 +36,8 @@ public:
 
 private:
     [[nodiscard]] ParserErrorOr expression();
+    [[nodiscard]] ParserErrorOr boolean_or();
+    [[nodiscard]] ParserErrorOr boolean_and();
     [[nodiscard]] ParserErrorOr equality();
     [[nodiscard]] ParserErrorOr comparison();
     [[nodiscard]] ParserErrorOr term();

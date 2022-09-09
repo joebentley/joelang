@@ -18,6 +18,8 @@ enum class TokenType {
     angle_left,
     angle_right_equals,
     angle_left_equals,
+    ampersand_ampersand,
+    pipe_pipe,
     equals_equals,
     bang_equals,
     bang,

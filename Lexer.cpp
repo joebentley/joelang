@@ -92,13 +92,18 @@ LexErrorOr Lexer::lex()
         }
 
         // Keywords
-
         CONTINUE_IF_MATCH(TokenType::true_tok)
         CONTINUE_IF_MATCH(TokenType::false_tok)
+
+        // Compound tokens
         CONTINUE_IF_MATCH(TokenType::equals_equals)
         CONTINUE_IF_MATCH(TokenType::bang_equals)
         CONTINUE_IF_MATCH(TokenType::angle_left_equals)
         CONTINUE_IF_MATCH(TokenType::angle_right_equals)
+        CONTINUE_IF_MATCH(TokenType::ampersand_ampersand)
+        CONTINUE_IF_MATCH(TokenType::pipe_pipe)
+
+        // Single tokens
         CONTINUE_IF_MATCH(TokenType::plus)
         CONTINUE_IF_MATCH(TokenType::minus)
         CONTINUE_IF_MATCH(TokenType::asterisk)

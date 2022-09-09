@@ -18,7 +18,45 @@ ParserErrorOr Parser::parse()
 
 ParserErrorOr Parser::expression()// NOLINT(misc-no-recursion)
 {
-    return equality();
+    return boolean_or();
+}
+
+ParserErrorOr Parser::boolean_or()// NOLINT(misc-no-recursion)
+{
+    auto maybe_expr = boolean_and();
+    TRY(maybe_expr)
+
+    auto expr = std::move(maybe_expr.get_value());
+
+    for (;;) {
+        if (accept(TokenType::pipe_pipe)) {
+            maybe_expr = boolean_and();
+            TRY(maybe_expr)
+
+            expr = Expression::Binary(std::move(expr), Operator::boolean_or, std::move(maybe_expr.get_value()));
+        } else {
+            return expr;
+        }
+    }
+}
+
+ParserErrorOr Parser::boolean_and()// NOLINT(misc-no-recursion)
+{
+    auto maybe_expr = equality();
+    TRY(maybe_expr)
+
+    auto expr = std::move(maybe_expr.get_value());
+
+    for (;;) {
+        if (accept(TokenType::ampersand_ampersand)) {
+            maybe_expr = equality();
+            TRY(maybe_expr)
+
+            expr = Expression::Binary(std::move(expr), Operator::boolean_and, std::move(maybe_expr.get_value()));
+        } else {
+            return expr;
+        }
+    }
 }
 
 ParserErrorOr Parser::equality()// NOLINT(misc-no-recursion)

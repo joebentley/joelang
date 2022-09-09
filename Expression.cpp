@@ -46,6 +46,10 @@ std::string op_to_string(Operator op)
             return "%";
         case Operator::power:
             return "^";
+        case Operator::boolean_and:
+            return "&&";
+        case Operator::boolean_or:
+            return "||";
         case Operator::equals:
             return "==";
         case Operator::not_equals:
@@ -122,6 +126,10 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
                     return Expression(lhs_bool == rhs_bool);
                 case Operator::not_equals:
                     return Expression(lhs_bool != rhs_bool);
+                case Operator::boolean_and:
+                    return Expression(lhs_bool && rhs_bool);
+                case Operator::boolean_or:
+                    return Expression(lhs_bool || rhs_bool);
                 default:
                     return Error{"Invalid operator for two bools: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
             }

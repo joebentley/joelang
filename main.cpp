@@ -7,7 +7,8 @@ int main()
     //    Lexer lexer("(13.4 + 3) * 4 + 4 / 4");
     //    Lexer lexer("true == false < 4");
     //    Lexer lexer(R"("Hello" + " world!")");
-    Lexer lexer("10 % 3 ^ 3");
+    //    Lexer lexer("10 % 3 ^ 3");
+    Lexer lexer("false || (5 > 3)");
     auto maybe_tokens = lexer.lex();
 
     if (maybe_tokens.is_error()) {

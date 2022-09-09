@@ -29,6 +29,10 @@ std::string token_type_string(TokenType type)
             return "angle_right_equals";
         case TokenType::angle_left_equals:
             return "angle_left_equals";
+        case TokenType::ampersand_ampersand:
+            return "ampersand_ampersand";
+        case TokenType::pipe_pipe:
+            return "pipe_pipe";
         case TokenType::equals_equals:
             return "equals_equals";
         case TokenType::bang_equals:
@@ -75,6 +79,10 @@ std::string token_type_lexeme(TokenType type)
             return ">=";
         case TokenType::angle_left_equals:
             return "<=";
+        case TokenType::ampersand_ampersand:
+            return "&&";
+        case TokenType::pipe_pipe:
+            return "||";
         case TokenType::equals_equals:
             return "==";
         case TokenType::bang_equals:
