@@ -1,4 +1,5 @@
 #include "Expression.h"
+#include <JK/Format.h>
 #include <cassert>
 #include <cmath>
 
@@ -116,7 +117,7 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
                 case Operator::not_equals:
                     return Expression(lhs_double != rhs_double);
                 default:
-                    return Error{"Invalid operator for two doubles: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+                    return Error{Format::fmt("Invalid operator for two doubles: {} {} {}", lhs->string(), op_to_string(*op), rhs->string())};
             }
         } else if (std::holds_alternative<bool>(lhs->value) && std::holds_alternative<bool>(rhs->value)) {
             auto lhs_bool = std::get<bool>(lhs->value);
@@ -131,7 +132,7 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
                 case Operator::boolean_or:
                     return Expression(lhs_bool || rhs_bool);
                 default:
-                    return Error{"Invalid operator for two bools: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+                    return Error{Format::fmt("Invalid operator for two bools: {} {} {}", lhs->string(), op_to_string(*op), rhs->string())};
             }
         } else if (std::holds_alternative<std::string>(lhs->value) && std::holds_alternative<std::string>(rhs->value)) {
             auto lhs_string = std::get<std::string>(lhs->value);
@@ -139,16 +140,16 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
             if (*op == Operator::add) {
                 return Expression(lhs_string + rhs_string);
             } else {
-                return Error{"Invalid operator for two strings: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+                return Error{Format::fmt("Invalid operator for two strings: {} {} {}", lhs->string(), op_to_string(*op), rhs->string())};
             }
         } else {
-            return Error{"Invalid or mismatched operand types in expression: " + lhs->string() + " " + op_to_string(*op) + " " + rhs->string()};
+            return Error{Format::fmt("Invalid or mismatched operand types in expression: {} {} {}", lhs->string(), op_to_string(*op), rhs->string())};
         }
     } else if (*type == ExpressionType::literal) {
         return Expression(value);
     } else if (*type == ExpressionType::unary) {
         if (left == nullptr)
-            return Error{"Missing operand for unary expression: " + string()};
+            return Error{Format::fmt("Missing operand for unary expression: {}", string())};
         auto operand = left->evaluate();
         if (operand.is_error())
             return operand.get_error();
@@ -157,20 +158,20 @@ EvaluationErrorOr Expression::evaluate()// NOLINT(misc-no-recursion)
             if (*op == Operator::negate) {
                 return Expression(-std::get<double>(operand->value));
             } else {
-                return Error{"Invalid unary operator for double: " + string()};
+                return Error{Format::fmt("Invalid unary operator for double: {}", string())};
             }
         } else if (std::holds_alternative<bool>(operand->value)) {
             if (*op == Operator::invert) {
                 return Expression(!std::get<bool>(operand->value));
             } else {
-                return Error{"Invalid unary operator for bool: " + string()};
+                return Error{Format::fmt("Invalid unary operator for bool: {}", string())};
             }
         } else {
             assert(false);
         }
     } else if (*type == ExpressionType::grouping) {
         if (left == nullptr)
-            return Error{"Missing operand for grouping expression: " + string()};
+            return Error{Format::fmt("Missing operand for grouping expression: {}", string())};
         auto operand = left->evaluate();
         if (operand.is_error())
             return operand.get_error();
